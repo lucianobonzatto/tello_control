@@ -1,13 +1,17 @@
 # tello_control
 
 ## install
-
 ```
-pip install tellopy
 cd catkin_ws/src
 git clone https://github.com/lucianobonzatto/tello_control.git
 cd ..
 catkin_make
+```
+### tellopy
+```
+cd tello_driver/src/tellopy/tellopy
+python3 setup.py bdist_wheel
+pip3 install dist/tellopy-*.dev*.whl --upgrade
 ```
 
 ## tello_driver
