@@ -1,5 +1,15 @@
 # tello_control
 
+## install
+
+```
+pip install tellopy
+cd catkin_ws/src
+git clone https://github.com/lucianobonzatto/tello_control.git
+cd ..
+catkin_make
+```
+
 ## tello_driver
 https://github.com/appie-17/tello_driver
 
@@ -42,22 +52,27 @@ https://github.com/ros-teleop/teleop_twist_keyboard
 Moving around:  
    i  o  p  
    k  l  ç  
-   ,  .  ;  
+   ,  .  ;   
+* anything else: stop  
+
+* u: up (+z)  
+* j: down (-z)
+* y: takeoff  
+* h: land  
   
-u : up (+z)  
-j : down (-z)  
-  
-y : takeoff  
-h : land  
-  
-anything else : stop  
-  
-q/z : increase/decrease max speeds by 10%  
-w/x : increase/decrease only linear speed by 10%  
-e/c : increase/decrease only angular speed by 10%  
+* q/z: increase/decrease max speeds by 10%  
+* w/x: increase/decrease only linear speed by 10%  
+* e/c: increase/decrease only angular speed by 10%  
 
 ### JOY control
 https://github.com/ros-teleop/teleop_twist_joy  
+#### DS3 control
+* L1: turbo velocity
+* L2: normal velocity
+* X: takeoff
+* square: land
+* analog left: x/y
+* analog right: z/yal
 
 ### hand control
 TODO
