@@ -53,6 +53,7 @@ nodes to control the drone
 
 ### keyboard control
 https://github.com/ros-teleop/teleop_twist_keyboard  
+``` ./shell_script/keyboard_control.sh ```
 Moving around:  
    i  o  p  
    k  l  ç  
@@ -70,7 +71,8 @@ Moving around:
 
 ### JOY control
 https://github.com/ros-teleop/teleop_twist_joy  
-#### DS3 control
+``` ./shell_script/joy_control.sh ```
+DS3 control:
 * L1: turbo velocity
 * L2: normal velocity
 * X: takeoff
