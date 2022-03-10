@@ -9,7 +9,7 @@ catkin_make
 ```
 ## dependencies
 
-###codec
+### codec
 ```
 sudo apt install ros-noetic-codec-image-transport
 ```
