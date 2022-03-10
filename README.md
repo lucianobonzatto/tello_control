@@ -7,6 +7,12 @@ git clone https://github.com/lucianobonzatto/tello_control.git
 cd ..
 catkin_make
 ```
+## dependencies
+
+###codec
+```
+sudo apt install ros-noetic-codec-image-transport
+```
 ### tellopy
 ```
 cd tello_driver/src/tellopy/tellopy
