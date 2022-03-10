@@ -88,8 +88,3 @@ DS3 control:
 
 ### hand control
 TODO
-
-### to fix
-
-RLException: [tello_node.launch] is neither a launch file in package [tello_driver] nor is [tello_driver] a launch file name
-The traceback for the exception was written to the log file
