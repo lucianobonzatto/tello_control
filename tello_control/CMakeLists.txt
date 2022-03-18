@@ -213,3 +213,7 @@ catkin_install_python(PROGRAMS
 add_executable(joy_teleop_node src/joy_teleop_node.cpp src/teleop_twist_joy.cpp)
 target_link_libraries(joy_teleop_node ${catkin_LIBRARIES})
 add_dependencies(joy_teleop_node tello_control_generate_messages_cpp)
+
+add_executable(pid_control_node src/pid_control_node.cpp)
+target_link_libraries(pid_control_node ${catkin_LIBRARIES})
+add_dependencies(pid_control_node tello_control_generate_messages_cpp)
