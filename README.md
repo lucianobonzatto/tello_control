@@ -12,13 +12,23 @@ catkin_make
 ### codec
 ```
 sudo apt install ros-noetic-codec-image-transport
-sudo apt-get install ros-noetic-joy
-
 ```
+
+### joy
+```
+sudo apt-get install ros-noetic-joy
+```
+
+### 
+```
+sudo apt-get install python3-wheel
+```
+
 ### tellopy
 ```
 cd tello_driver/src/tellopy/tellopy
 python3 setup.py bdist_wheel
+sudo apt-get install python3-pip
 pip3 install dist/tellopy-*.dev*.whl --upgrade
 ```
 
