@@ -12,6 +12,8 @@ catkin_make
 ### codec
 ```
 sudo apt install ros-noetic-codec-image-transport
+sudo apt-get install ros-noetic-joy
+
 ```
 ### tellopy
 ```
