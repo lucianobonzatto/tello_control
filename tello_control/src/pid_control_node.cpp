@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
   float deltaX, deltaY, deltaZ;
   float last_deltaX, last_deltaY, last_deltaZ;
   float cstP = 0.01, cstI = 0.01, cstD = 0.01;
+  float cstP_eixoZ = 0.01, cstI_eixoZ = 0.01, cstD_eixoZ = 0.01;
   float maxVel = 1;
 
   double time, last_time;
@@ -40,6 +41,9 @@ int main(int argc, char *argv[])
   nh_param.getParam("constante_P", cstP);
   nh_param.getParam("constante_I", cstI);
   nh_param.getParam("constante_D", cstD);
+  nh_param.getParam("constante_P_Z", cstP_eixoZ);
+  nh_param.getParam("constante_I_Z", cstI_eixoZ);
+  nh_param.getParam("constante_D_Z", cstD_eixoZ);
 
   nh_param.param<double>("velocidade_maxima", maxVel);
 
@@ -58,6 +62,13 @@ int main(int argc, char *argv[])
   while(ros::ok()){
     ros::spinOnce();
 
+    nh_param.getParam("constante_P", cstP);
+    nh_param.getParam("constante_I", cstI);
+    nh_param.getParam("constante_D", cstD);
+    nh_param.getParam("constante_P_Z", cstP_eixoZ);
+    nh_param.getParam("constante_I_Z", cstI_eixoZ);
+    nh_param.getParam("constante_D_Z", cstD_eixoZ);
+
     deltaX = telloPose.position.x - gotoPose.x;
     deltaY = telloPose.position.y - gotoPose.y;
     deltaZ = telloPose.position.z - gotoPose.z;
@@ -65,7 +76,7 @@ int main(int argc, char *argv[])
 
     cmdVelMsg.linear.x = (-1)*cstP*deltaX + cstI*(deltaX*(time-last_time)) + cstD*(deltaX-last_deltaX)/(time-last_time);
     cmdVelMsg.linear.y = (cstP*deltaY + cstI*(deltaY*(time-last_time)) + cstD*(deltaY-last_deltaY)/(time-last_time));
-    cmdVelMsg.linear.z = (cstP*deltaZ + cstI*(deltaZ*(time-last_time)) + cstD*(deltaZ-last_deltaZ)/(time-last_time));
+    cmdVelMsg.linear.z = (cstP_eixoZ*deltaZ + cstI_eixoZ*(deltaZ*(time-last_time)) + cstD_eixoZ*(deltaZ-last_deltaZ)/(time-last_time));
     
     if (cmdVelMsg.linear.x > maxVel)
         cmdVelMsg.linear.x = maxVel;
@@ -86,6 +97,7 @@ int main(int argc, char *argv[])
     ROS_INFO("pose X: %f, pose Y: %f, pose Z: %f", telloPose.position.x, telloPose.position.y, telloPose.position.z);
     ROS_INFO("cmdv X: %f, cmdv Y: %f, cmdv Z: %f", cmdVelMsg.linear.x, cmdVelMsg.linear.y, cmdVelMsg.linear.z);
     ROS_INFO("cstP: %f, cstI: %f, cstD: %f", cstP, cstI, cstD);
+    ROS_INFO("cstPz: %f, cstIz: %f, cstDz: %f", cstP_eixoZ, cstI_eixoZ, cstD_eixoZ);
     ROS_INFO("\n\n");
 
     cmd_vel_pub.publish(cmdVelMsg);
