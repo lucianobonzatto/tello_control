@@ -10,7 +10,7 @@ cd "$SCRIPTPATH"
 rm .tmuxinator.yml
 
 # link the session file to .tmuxinator.yml
-ln pid_tchatchabum.yml .tmuxinator.yml
+ln pid_control.yml .tmuxinator.yml
 
 # start tmuxinator
 tmuxinator

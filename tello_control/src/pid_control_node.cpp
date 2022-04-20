@@ -7,17 +7,40 @@
 geometry_msgs::Point gotoPose;
 geometry_msgs::Pose telloPose;
 
+ros::Publisher pose_pub;
+int detect;
+
 void gotoCallback(const geometry_msgs::Pose::ConstPtr& msg){
   gotoPose.x = msg->position.x;
   gotoPose.y = msg->position.y;
   gotoPose.z = msg->position.z;
 }
 void poseCallback(const ar_track_alvar_msgs::AlvarMarkers::ConstPtr& msg){
+  geometry_msgs::Pose out_msg;
+  out_msg.position.x = 0;
+  out_msg.position.y = 0;
+  out_msg.position.z = 0;
+  out_msg.orientation.x = 0;
+  out_msg.orientation.y = 0;
+  out_msg.orientation.z = 0;
+
   if(!msg->markers.empty()){
     telloPose.position.x = msg->markers[0].pose.pose.position.x;
     telloPose.position.y = msg->markers[0].pose.pose.position.y;
     telloPose.position.z = msg->markers[0].pose.pose.position.z;
+
+    out_msg.position.x = msg->markers[0].pose.pose.position.x;
+    out_msg.position.y = msg->markers[0].pose.pose.position.y;
+    out_msg.position.z = msg->markers[0].pose.pose.position.z;
+    out_msg.orientation.x = msg->markers[0].pose.pose.orientation.x;
+    out_msg.orientation.y = msg->markers[0].pose.pose.orientation.y;
+    out_msg.orientation.z = msg->markers[0].pose.pose.orientation.z;
+    detect = 1;
   }
+  else{
+    detect = 0;
+  }
+  pose_pub.publish(out_msg);
 }
 
 int main(int argc, char *argv[])
@@ -38,6 +61,8 @@ int main(int argc, char *argv[])
 
   double time, last_time;
 
+  detect = 0;
+
   nh_param.getParam("constante_P", cstP);
   nh_param.getParam("constante_I", cstI);
   nh_param.getParam("constante_D", cstD);
@@ -48,13 +73,14 @@ int main(int argc, char *argv[])
   nh_param.param<double>("velocidade_maxima", maxVel);
 
   cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("/tello/cmd_vel", 1);
+  pose_pub = nh.advertise<geometry_msgs::Pose>("/pid_control/pose", 1);
   goto_sub = nh.subscribe<geometry_msgs::Pose>("/pid_control/goto", 1, &gotoCallback);
   pose_sub = nh.subscribe<ar_track_alvar_msgs::AlvarMarkers>("/ar_pose_marker", 1, &poseCallback);
 
   geometry_msgs::Twist cmdVelMsg;
   cmdVelMsg.linear.x = 0;
   cmdVelMsg.linear.y = 0;
-  cmdVelMsg.linear.z = 0;
+  cmdVelMsg.linear.z = 2;
   cmdVelMsg.angular.x = 0;
   cmdVelMsg.angular.y = 0;
   cmdVelMsg.angular.z = 0;
@@ -73,26 +99,34 @@ int main(int argc, char *argv[])
     deltaY = telloPose.position.y - gotoPose.y;
     deltaZ = telloPose.position.z - gotoPose.z;
     time = ros::Time::now().toSec();
-
-    cmdVelMsg.linear.x = (-1)*cstP*deltaX + cstI*(deltaX*(time-last_time)) + cstD*(deltaX-last_deltaX)/(time-last_time);
-    cmdVelMsg.linear.y = (cstP*deltaY + cstI*(deltaY*(time-last_time)) + cstD*(deltaY-last_deltaY)/(time-last_time));
-    cmdVelMsg.linear.z = (cstP_eixoZ*deltaZ + cstI_eixoZ*(deltaZ*(time-last_time)) + cstD_eixoZ*(deltaZ-last_deltaZ)/(time-last_time));
     
-    if (cmdVelMsg.linear.x > maxVel)
-        cmdVelMsg.linear.x = maxVel;
-    if (cmdVelMsg.linear.x < -maxVel)
-        cmdVelMsg.linear.x = -maxVel;
+    if(detect == 1){
+      cmdVelMsg.linear.x = (-1)*cstP*deltaX + cstI*(deltaX*(time-last_time)) + cstD*(deltaX-last_deltaX)/(time-last_time);
+      cmdVelMsg.linear.y = (cstP*deltaY + cstI*(deltaY*(time-last_time)) + cstD*(deltaY-last_deltaY)/(time-last_time));
+      cmdVelMsg.linear.z = (cstP_eixoZ*deltaZ + cstI_eixoZ*(deltaZ*(time-last_time)) + cstD_eixoZ*(deltaZ-last_deltaZ)/(time-last_time));
+    
+      if (cmdVelMsg.linear.x > maxVel)
+          cmdVelMsg.linear.x = maxVel;
+      if (cmdVelMsg.linear.x < -maxVel)
+          cmdVelMsg.linear.x = -maxVel;
 
-    if (cmdVelMsg.linear.y > maxVel)
-        cmdVelMsg.linear.y = maxVel;
-    if (cmdVelMsg.linear.y < -maxVel)
-        cmdVelMsg.linear.y = -maxVel;
+      if (cmdVelMsg.linear.y > maxVel)
+          cmdVelMsg.linear.y = maxVel;
+      if (cmdVelMsg.linear.y < -maxVel)
+          cmdVelMsg.linear.y = -maxVel;
 
-    if (cmdVelMsg.linear.z > maxVel)
-        cmdVelMsg.linear.z = maxVel;
-    if (cmdVelMsg.linear.z < -maxVel)
-        cmdVelMsg.linear.z = -maxVel;
-
+      if (cmdVelMsg.linear.z > maxVel)
+          cmdVelMsg.linear.z = maxVel;
+      if (cmdVelMsg.linear.z < -maxVel)
+          cmdVelMsg.linear.z = -maxVel;
+    }
+    else{
+      cmdVelMsg.linear.x = 0;
+      cmdVelMsg.linear.y = 0;
+      cmdVelMsg.linear.z = 0;
+    }
+    
+    
     ROS_INFO("goto X: %f, goto Y: %f, goto Z: %f", gotoPose.x, gotoPose.y, gotoPose.z);
     ROS_INFO("pose X: %f, pose Y: %f, pose Z: %f", telloPose.position.x, telloPose.position.y, telloPose.position.z);
     ROS_INFO("cmdv X: %f, cmdv Y: %f, cmdv Z: %f", cmdVelMsg.linear.x, cmdVelMsg.linear.y, cmdVelMsg.linear.z);
