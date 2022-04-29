@@ -1,6 +1,6 @@
 Metadata-Version: 1.2
 Name: tellopy
-Version: 0.7.0.dev0
+Version: 1.7.0.luciano
 Summary: DJI Tello drone controller
 Home-page: https://github.com/hanyazou/TelloPy
 Author: Hanyazou
