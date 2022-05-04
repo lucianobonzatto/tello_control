@@ -60,7 +60,7 @@ class Tello(object):
     LOG_DEBUG = logger.LOG_DEBUG
     LOG_ALL = logger.LOG_ALL
 
-    def __init__(self, port=9000):
+    def __init__(self, port=9000, teste='wlo1'):
         self.tello_addr = ('192.168.10.1', 8889)
         self.debug = False
         self.pkt_seq_num = 0x01e4
@@ -98,6 +98,7 @@ class Tello(object):
 
         # Create a UDP socket
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, 25, teste.encode()) 
         self.sock.bind(('', self.port))
         self.sock.settimeout(2.0)
 
