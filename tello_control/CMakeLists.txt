@@ -217,3 +217,7 @@ add_dependencies(joy_teleop_node tello_control_generate_messages_cpp)
 add_executable(pid_control_node src/pid_control_node.cpp)
 target_link_libraries(pid_control_node ${catkin_LIBRARIES})
 add_dependencies(pid_control_node tello_control_generate_messages_cpp)
+
+add_executable(manager_node src/manager_node.cpp)
+target_link_libraries(manager_node ${catkin_LIBRARIES})
+add_dependencies(manager_node tello_control_generate_messages_cpp)
