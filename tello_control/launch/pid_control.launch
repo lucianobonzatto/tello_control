@@ -7,6 +7,7 @@
 		<param name="constante_P_Z" value="1" />
 		<param name="constante_I_Z" value="1" />
 		<param name="constante_D_Z" value="1" />
+		<param name="DIST_MAX" value="0.1" />
 	</node>
 
 </launch>
