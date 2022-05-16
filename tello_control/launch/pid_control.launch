@@ -4,8 +4,8 @@
 		<param name="constante_P" value="1" />
 		<param name="constante_I" value="1" />
 		<param name="constante_D" value="1" />
-		<param name="constante_P_Z" value="1" />
-		<param name="constante_I_Z" value="1" />
+		<param name="constante_P_Z" value="2" />
+		<param name="constante_I_Z" value="0.5" />
 		<param name="constante_D_Z" value="1" />
 		<param name="DIST_MAX" value="0.1" />
 	</node>

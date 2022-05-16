@@ -44,7 +44,7 @@ class RospyLogger(logger.Logger):
     def error(self, s):
         if self.log_level < logger.LOG_ERROR:
             return
-        rospy.logerr(s)
+        # rospy.logerr(s)
 
     def warn(self, s):
         if self.log_level < logger.LOG_WARN:

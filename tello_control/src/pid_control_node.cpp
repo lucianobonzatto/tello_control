@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
   ros::Subscriber start_sub;
 
   float deltaX, deltaY, deltaZ;
-  float last_deltaX, last_deltaY, last_deltaZ;
+  float last_deltaX = 0, last_deltaY = 0, last_deltaZ = 0;
   float cstP = 0.01, cstI = 0.01, cstD = 0.01;
   float cstP_eixoZ = 0.01, cstI_eixoZ = 0.01, cstD_eixoZ = 0.01;
   float maxVel = 1;
@@ -129,6 +129,21 @@ int main(int argc, char *argv[])
     nh_param.getParam("constante_I_Z", cstI_eixoZ);
     nh_param.getParam("constante_D_Z", cstD_eixoZ);
 
+    if(running.data == 0){
+      cmdVelMsg.linear.x = 0;
+      cmdVelMsg.linear.y = 0;
+      cmdVelMsg.linear.z = 0;
+      cmdVelMsg.angular.x = 0;
+      cmdVelMsg.angular.y = 0;
+      cmdVelMsg.angular.z = 0;
+      last_deltaX = 0;
+      last_deltaY = 0;
+      last_deltaZ = 0;
+      flag_cheguei.data = 0;
+      flag_pub.publish(flag_cheguei);
+      continue;
+    }
+
     deltaX = telloPose.position.x - gotoPose.x;
     deltaY = telloPose.position.y - gotoPose.y;
     deltaZ = telloPose.position.z - gotoPose.z;
@@ -173,12 +188,12 @@ int main(int argc, char *argv[])
       cmdVelMsg.linear.z = 0;
     }
     
-    ROS_INFO("goto X: %f, goto Y: %f, goto Z: %f", gotoPose.x, gotoPose.y, gotoPose.z);
-    ROS_INFO("pose X: %f, pose Y: %f, pose Z: %f", telloPose.position.x, telloPose.position.y, telloPose.position.z);
+    // ROS_INFO("goto X: %f, goto Y: %f, goto Z: %f", gotoPose.x, gotoPose.y, gotoPose.z);
+    // ROS_INFO("pose X: %f, pose Y: %f, pose Z: %f", telloPose.position.x, telloPose.position.y, telloPose.position.z);
     ROS_INFO("cmdv X: %f, cmdv Y: %f, cmdv Z: %f", cmdVelMsg.linear.x, cmdVelMsg.linear.y, cmdVelMsg.linear.z);
-    ROS_INFO("cstP: %f, cstI: %f, cstD: %f", cstP, cstI, cstD);
-    ROS_INFO("cstPz: %f, cstIz: %f, cstDz: %f", cstP_eixoZ, cstI_eixoZ, cstD_eixoZ);
-    ROS_INFO("cheguei: %i, running: %i", flag_cheguei.data, running.data);
+    // ROS_INFO("cstP: %f, cstI: %f, cstD: %f", cstP, cstI, cstD);
+    // ROS_INFO("cstPz: %f, cstIz: %f, cstDz: %f", cstP_eixoZ, cstI_eixoZ, cstD_eixoZ);
+    // ROS_INFO("cheguei: %i, running: %i", flag_cheguei.data, running.data);
     ROS_INFO("\n\n");
 
     if(running.data == 1){
