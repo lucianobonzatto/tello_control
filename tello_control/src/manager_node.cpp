@@ -24,7 +24,6 @@
 using namespace std;
 
 geometry_msgs::Point gotoPose;
-geometry_msgs::Pose telloPose;
 
 ros::Publisher pose_pub;
 
@@ -118,11 +117,11 @@ int main(int argc, char *argv[])
   ros::NodeHandle nh(""), nh_param("~");
   ros::Rate loop_rate(10);
 
-  ros::Publisher takeoff_pub = nh.advertise<std_msgs::Empty>("/tello/takeoff", 1);
-  ros::Publisher land_pub = nh.advertise<std_msgs::Empty>("/tello/land", 1);
-  ros::Publisher goto_pub = nh.advertise<geometry_msgs::Pose>("/pid_control/goto", 1);
-  ros::Publisher pid_start_pub = nh.advertise<std_msgs::Bool>("/pid_control/start", 1);
-  ros::Subscriber pid_flag_sub = nh.subscribe<std_msgs::Bool>("/pid_control/flag", 1, &pidFlagCallback);
+  ros::Publisher takeoff_pub = nh.advertise<std_msgs::Empty>("/tello_ID0/takeoff", 1);
+  ros::Publisher land_pub = nh.advertise<std_msgs::Empty>("/tello_ID0/land", 1);
+  ros::Publisher goto_pub = nh.advertise<geometry_msgs::Pose>("tello_ID0/pid/goto", 1);
+  ros::Publisher pid_start_pub = nh.advertise<std_msgs::Bool>("tello_ID0/pid/start", 1);
+  ros::Subscriber pid_flag_sub = nh.subscribe<std_msgs::Bool>("tello_ID0/pid/flag", 1, &pidFlagCallback);
 
   int state_square = 0, flag_square = 0;
 
@@ -142,39 +141,39 @@ int main(int argc, char *argv[])
 
   ponto0.position.x = 0.5;
   ponto0.position.y = 0.5;
-  ponto0.position.z = 1.9;
+  ponto0.position.z = 2.0;
 
   ponto1.position.x = 0.5;
   ponto1.position.y = -0.2;
-  ponto1.position.z = 1.9;
+  ponto1.position.z = 2.0;
 
   ponto2.position.x = -0.5;
   ponto2.position.y = -0.2;
-  ponto2.position.z = 1.9;
+  ponto2.position.z = 2.0;
  
   ponto3.position.x = -0.5;
   ponto3.position.y = 0.5;
-  ponto3.position.z = 1.9;
+  ponto3.position.z = 2.0;
 
   geometry_msgs::Pose ponto0T;
   geometry_msgs::Pose ponto1T;
   geometry_msgs::Pose ponto2T;
   geometry_msgs::Pose ponto3T;
 
-  ponto0T.position.x = 0.5;
-  ponto0T.position.y = 0.0;
-  ponto0T.position.z = 2.5;
+  ponto0T.position.x = 0.0;
+  ponto0T.position.y = 0.35;
+  ponto0T.position.z = 2.0;
 
-  ponto1T.position.x = -0.5;
-  ponto1T.position.y = 0.0;
-  ponto1T.position.z = 2.5;
+  ponto1T.position.x = -0.7;
+  ponto1T.position.y = 0.35;
+  ponto1T.position.z = 2.0;
 
   ponto2T.position.x = 0.0;
-  ponto2T.position.y = 0.0;
+  ponto2T.position.y = 0.35;
   ponto2T.position.z = 2.0;
  
   ponto3T.position.x = 0.0;
-  ponto3T.position.y = 0.0;
+  ponto3T.position.y = 0.35;
   ponto3T.position.z = 1.0;
 
 
@@ -198,6 +197,8 @@ int main(int argc, char *argv[])
         
       case LAND:
         cout << "LAND START" << endl;
+        boolMsg.data = 0;
+        pid_start_pub.publish(boolMsg);
         land_pub.publish(emptyMsg);
         sleep(5);
         state = POUSADO;
@@ -359,6 +360,7 @@ int main(int argc, char *argv[])
           break;
         case 2:
           cout << "ponto 2 " << pid_flag  << endl;
+
           if(flag_square == 0){
             //goto ponto 2
             goto_pub.publish(ponto2T);

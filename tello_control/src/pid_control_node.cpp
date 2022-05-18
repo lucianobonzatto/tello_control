@@ -1,4 +1,6 @@
 #include <math.h>
+#include <iostream>
+#include <string>
 #include "ros/ros.h"
 #include "std_msgs/Bool.h"
 #include "geometry_msgs/Pose.h"
@@ -10,9 +12,9 @@ geometry_msgs::Point gotoPose;
 geometry_msgs::Pose telloPose;
 std_msgs::Bool running;
 
-ros::Publisher pose_pub;
 ros::Publisher cmd_vel_pub;
 int detect;
+int tag_id;
 
 void gotoCallback(const geometry_msgs::Pose::ConstPtr& msg){
   gotoPose.x = msg->position.x;
@@ -20,31 +22,20 @@ void gotoCallback(const geometry_msgs::Pose::ConstPtr& msg){
   gotoPose.z = msg->position.z;
 }
 void poseCallback(const ar_track_alvar_msgs::AlvarMarkers::ConstPtr& msg){
-  geometry_msgs::Pose out_msg;
-  out_msg.position.x = 0;
-  out_msg.position.y = 0;
-  out_msg.position.z = 0;
-  out_msg.orientation.x = 0;
-  out_msg.orientation.y = 0;
-  out_msg.orientation.z = 0;
+  int flag_detc = 0;
 
-  if(!msg->markers.empty()){
-    telloPose.position.x = msg->markers[0].pose.pose.position.x;
-    telloPose.position.y = msg->markers[0].pose.pose.position.y;
-    telloPose.position.z = msg->markers[0].pose.pose.position.z;
-
-    out_msg.position.x = msg->markers[0].pose.pose.position.x;
-    out_msg.position.y = msg->markers[0].pose.pose.position.y;
-    out_msg.position.z = msg->markers[0].pose.pose.position.z;
-    out_msg.orientation.x = msg->markers[0].pose.pose.orientation.x;
-    out_msg.orientation.y = msg->markers[0].pose.pose.orientation.y;
-    out_msg.orientation.z = msg->markers[0].pose.pose.orientation.z;
-    detect = 1;
+  for (int i = 0; i < msg->markers.size(); i++)
+  {
+    if(msg->markers[i].id == tag_id){
+      telloPose.position.x = msg->markers[i].pose.pose.position.x;
+      telloPose.position.y = msg->markers[i].pose.pose.position.y;
+      telloPose.position.z = msg->markers[i].pose.pose.position.z;
+      flag_detc = 1;
+      break;
+    }
   }
-  else{
-    detect = 0;
-  }
-  pose_pub.publish(out_msg);
+  
+  detect = flag_detc;
 }
 void startCallback(const std_msgs::Bool::ConstPtr& msg){
   //running->data = (int) msg->data;
@@ -82,9 +73,12 @@ int main(int argc, char *argv[])
   float maxVel = 1;
   float dist_max = 0.1;
 
-  double time, last_time;
+  tag_id = 0;
 
+  double time, last_time;
   detect = 0;
+
+  std::string name(ros::this_node::getNamespace());
 
   nh_param.getParam("constante_P", cstP);
   nh_param.getParam("constante_I", cstI);
@@ -93,16 +87,16 @@ int main(int argc, char *argv[])
   nh_param.getParam("constante_I_Z", cstI_eixoZ);
   nh_param.getParam("constante_D_Z", cstD_eixoZ);
   nh_param.getParam("DIST_MAX", dist_max);
+  nh_param.getParam("TAG_ID", tag_id);
 
   nh_param.param<double>("velocidade_maxima", maxVel);
 
-  cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("/tello/cmd_vel", 1);
-  pose_pub = nh.advertise<geometry_msgs::Pose>("/pid_control/pose", 1);
-  flag_pub = nh.advertise<std_msgs::Bool>("/pid_control/flag", 1);
+  cmd_vel_pub = nh.advertise<geometry_msgs::Twist>(name+"/cmd_vel", 1);
+  flag_pub = nh.advertise<std_msgs::Bool>(name+"/pid/flag", 1);
 
-  goto_sub = nh.subscribe<geometry_msgs::Pose>("/pid_control/goto", 1, &gotoCallback);
+  goto_sub = nh.subscribe<geometry_msgs::Pose>(name+"/pid/goto", 1, &gotoCallback);
   pose_sub = nh.subscribe<ar_track_alvar_msgs::AlvarMarkers>("/ar_pose_marker", 1, &poseCallback);
-  start_sub = nh.subscribe<std_msgs::Bool>("/pid_control/start", 1, &startCallback);
+  start_sub = nh.subscribe<std_msgs::Bool>(name+"/pid/start", 1, &startCallback);
 
   geometry_msgs::Twist cmdVelMsg;
   std_msgs::Bool flag_cheguei;
@@ -121,6 +115,9 @@ int main(int argc, char *argv[])
 
   while(ros::ok()){
     ros::spinOnce();
+
+    // ROS_INFO("%i detect -> %i", tag_id, detect);
+    // ROS_INFO("pose X: %f, pose Y: %f, pose Z: %f", telloPose.position.x, telloPose.position.y, telloPose.position.z);
 
     nh_param.getParam("constante_P", cstP);
     nh_param.getParam("constante_I", cstI);

@@ -221,3 +221,7 @@ add_dependencies(pid_control_node tello_control_generate_messages_cpp)
 add_executable(manager_node src/manager_node.cpp)
 target_link_libraries(manager_node ${catkin_LIBRARIES})
 add_dependencies(manager_node tello_control_generate_messages_cpp)
+
+add_executable(manager_two_node src/manager_two_node.cpp)
+target_link_libraries(manager_two_node ${catkin_LIBRARIES})
+add_dependencies(manager_two_node tello_control_generate_messages_cpp)

@@ -6,7 +6,7 @@ chmod +x tello_control.sh
 
 
 gnome-terminal --window -- ./ar_track.sh
-sleep 5
+sleep 10
 
 gnome-terminal --window -- ./pid_control.sh
 sleep 5

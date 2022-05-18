@@ -1,0 +1,16 @@
+name: echo_view
+root: ./
+startup_window: echo_view
+pre_window: source ~/tello_ws/devel/setup.bash
+windows:
+  - echo_view:
+      layout: tiled
+      panes:
+        - sleep 2; rostopic echo /tello_ID0/land
+        - sleep 2; rostopic echo /tello_ID0/takeoff
+        - sleep 2; rostopic echo /tello_ID0/pid/start
+        - sleep 2; rostopic echo /tello_ID0/pid/flag
+        - sleep 2; rostopic echo /tello_ID8/land
+        - sleep 2; rostopic echo /tello_ID8/takeoff
+        - sleep 2; rostopic echo /tello_ID8/pid/start
+        - sleep 2; rostopic echo /tello_ID8/pid/flag

@@ -1,9 +1,0 @@
-name: pid_control
-root: ./
-startup_window: tello_drive
-windows:
-  - tello_drive:
-      layout: tiled
-      panes:
-        - sleep 2; roslaunch tello_driver tello_node.launch
-        - sleep 5; roslaunch tello_control pid_control.launch

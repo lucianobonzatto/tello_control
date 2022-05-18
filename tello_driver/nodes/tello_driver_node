@@ -103,8 +103,12 @@ class TelloNode(tello.Tello):
         
         if flag == 1:
                 super(TelloNode, self).__init__(port=9000, teste='wlo1')
-        else:
+        elif flag == 2:
                 super(TelloNode, self).__init__(port=9000, teste='wlx940c6d8e6ec3')
+        elif flag == 3:
+                super(TelloNode, self).__init__(port=9000, teste='wlxa0f3c10b4088')
+        else:
+                super(TelloNode, self).__init__(port=9000, teste='wlo1')
 
         rospy.loginfo('Connecting to drone @ %s:%d' % self.tello_addr)
         self.connect()
