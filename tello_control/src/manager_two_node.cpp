@@ -114,13 +114,13 @@ int main(int argc, char *argv[])
   ros::NodeHandle nh("");
   ros::Rate loop_rate(10);
 
-  ros::Publisher takeoff_pub_ID0 = nh.advertise<std_msgs::Empty>("/tello_ID0/takeoff", 1);
+  ros::Publisher takeoff_pub_ID0 = nh.advertise<std_msgs::Empty>("/tello_ID0/manual_takeoff", 1);
   ros::Publisher land_pub_ID0 = nh.advertise<std_msgs::Empty>("/tello_ID0/land", 1);
   ros::Publisher goto_pub_ID0 = nh.advertise<geometry_msgs::Pose>("tello_ID0/pid/goto", 1);
   ros::Publisher pid_start_pub_ID0 = nh.advertise<std_msgs::Bool>("tello_ID0/pid/start", 1);
   ros::Subscriber pid_flag_sub_ID0 = nh.subscribe<std_msgs::Bool>("tello_ID0/pid/flag", 1, &pidFlag_ID0_Callback);
 
-  ros::Publisher takeoff_pub_ID8 = nh.advertise<std_msgs::Empty>("/tello_ID8/takeoff", 1);
+  ros::Publisher takeoff_pub_ID8 = nh.advertise<std_msgs::Empty>("/tello_ID8/manual_takeoff", 1);
   ros::Publisher land_pub_ID8 = nh.advertise<std_msgs::Empty>("/tello_ID8/land", 1);
   ros::Publisher goto_pub_ID8 = nh.advertise<geometry_msgs::Pose>("tello_ID8/pid/goto", 1);
   ros::Publisher pid_start_pub_ID8 = nh.advertise<std_msgs::Bool>("tello_ID8/pid/start", 1);
@@ -140,15 +140,15 @@ int main(int argc, char *argv[])
   std::vector<geometry_msgs::Pose> line_ID0;
   std::vector<geometry_msgs::Pose> line_ID8;
 
-  includePoints(&line_ID0, -0.2, 0.35, 2.0);
-  includePoints(&line_ID0, -0.7, 0.35, 2.0);
-  includePoints(&line_ID0, -0.2, 0.35, 2.0);
-  includePoints(&line_ID0, -0.2, 0.35, 1.0);
+  includePoints(&line_ID0, 0.2, 0.00, 2.0);
+  includePoints(&line_ID0, 0.6, 0.00, 2.0);
+  includePoints(&line_ID0, 0.2, 0.00, 2.0);
+  //includePoints(&line_ID0, 0.2, 0.00, 1.0);
 
-  includePoints(&line_ID8, 0.2, 0.35, 2.0);
-  includePoints(&line_ID8, 0.7, 0.35, 2.0);
-  includePoints(&line_ID8, 0.2, 0.35, 2.0);
-  includePoints(&line_ID8, 0.2, 0.35, 1.0);
+  includePoints(&line_ID8, -0.2, 0.40, 2.0);
+  includePoints(&line_ID8, -0.6, 0.40, 2.0);
+  includePoints(&line_ID8, -0.2, 0.40, 2.0);
+  //includePoints(&line_ID8, -0.2, 0.40, 1.0);
 
   while(ros::ok()){
     ros::spinOnce();

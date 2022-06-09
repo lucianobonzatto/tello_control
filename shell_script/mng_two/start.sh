@@ -6,7 +6,9 @@ chmod +x manager.sh
 chmod +x pid_ar_tracker.sh
 
 gnome-terminal --window -- ./multi_tello_connect.sh
-sleep 7
-gnome-terminal --window -- ./echo_view.sh
+sleep 20
 gnome-terminal --window -- ./manager.sh
+sleep 3
 gnome-terminal --window -- ./pid_ar_tracker.sh
+sleep 3
+gnome-terminal --window -- ./echo_view.sh
