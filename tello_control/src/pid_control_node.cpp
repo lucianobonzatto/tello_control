@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
   float last_deltaX = 0, last_deltaY = 0, last_deltaZ = 0;
   float cstP = 0.01, cstI = 0.01, cstD = 0.01;
   float cstP_eixoZ = 0.01, cstI_eixoZ = 0.01, cstD_eixoZ = 0.01;
-  float maxVel = 0.5;
+  float maxVel = 3.0;
   float dist_max = 0.1;
 
   tag_id = 0;
@@ -148,61 +148,61 @@ int main(int argc, char *argv[])
     cmdVelMsg.linear.z = 0;
     flag_cheguei.data = 0;
     if(detect == 1){
-      std::cout << "x:" << gotoPose.x << " " << telloPose.position.x << " " << dist_max << std::endl;
-      if(abs(gotoPose.x - telloPose.position.x) > dist_max){
-        std::cout << "entrou" << std::endl;
-        if(telloPose.position.x < gotoPose.x)
-          cmdVelMsg.linear.x = 0.1;
-        else
-          cmdVelMsg.linear.x = -0.1;
-      }
-      std::cout << "y:" << gotoPose.y << " " << telloPose.position.y << " " << dist_max << std::endl;
-      if(abs(gotoPose.y - telloPose.position.y) > dist_max){
-        std::cout << "entrou" << std::endl;
-        if(telloPose.position.y < gotoPose.y)
-          cmdVelMsg.linear.y =-0.1;
-        else
-          cmdVelMsg.linear.y =0.1;
-      }
-      std::cout << "z:" << gotoPose.z << " " << telloPose.position.z << " " << dist_max << std::endl;
-      if(abs(gotoPose.z - telloPose.position.z) > dist_max){
-        std::cout << "entrou" << std::endl;
-        if(telloPose.position.z < gotoPose.z)
-          cmdVelMsg.linear.z = -0.5;
-        else
-          cmdVelMsg.linear.z = 0.5;
-      }
-
-      // cmdVelMsg.linear.x = (-1)*cstP*deltaX + cstI*(deltaX*(time-last_time)) + cstD*(deltaX-last_deltaX)/(time-last_time);
-      // cmdVelMsg.linear.y = (cstP*deltaY + cstI*(deltaY*(time-last_time)) + cstD*(deltaY-last_deltaY)/(time-last_time));
-      // cmdVelMsg.linear.z = (cstP_eixoZ*deltaZ + cstI_eixoZ*(deltaZ*(time-last_time)) + cstD_eixoZ*(deltaZ-last_deltaZ)/(time-last_time));
-      // flag_cheguei.data = 0;
-
-      // if (cmdVelMsg.linear.x > maxVel)
-      //     cmdVelMsg.linear.x = maxVel;
-      // if (cmdVelMsg.linear.x < -maxVel)
-      //     cmdVelMsg.linear.x = -maxVel;
-
-      // if (cmdVelMsg.linear.y > maxVel)
-      //     cmdVelMsg.linear.y = maxVel;
-      // if (cmdVelMsg.linear.y < -maxVel)
-      //     cmdVelMsg.linear.y = -maxVel;
-
-      // if (cmdVelMsg.linear.z > maxVel)
-      //     cmdVelMsg.linear.z = maxVel;
-      // if (cmdVelMsg.linear.z < -maxVel)
-      //     cmdVelMsg.linear.z = -maxVel;
-      
-      // if(abs(gotoPose.x - telloPose.position.x) < dist_max){
-      //   if(abs(gotoPose.y - telloPose.position.y) < dist_max){
-      //     if(abs(gotoPose.z - telloPose.position.z) < dist_max){
-      //       flag_cheguei.data = 1;
-      //       cmdVelMsg.linear.x = 0;
-      //       cmdVelMsg.linear.y = 0;
-      //       cmdVelMsg.linear.z = 0;
-      //     } 
-      //   }
+      // std::cout << "x:" << gotoPose.x << " " << telloPose.position.x << " " << dist_max << std::endl;
+      // if(abs(gotoPose.x - telloPose.position.x) > dist_max){
+      //   std::cout << "entrou" << std::endl;
+      //   if(telloPose.position.x < gotoPose.x)
+      //     cmdVelMsg.linear.x = 0.1;
+      //   else
+      //     cmdVelMsg.linear.x = -0.1;
       // }
+      // std::cout << "y:" << gotoPose.y << " " << telloPose.position.y << " " << dist_max << std::endl;
+      // if(abs(gotoPose.y - telloPose.position.y) > dist_max){
+      //   std::cout << "entrou" << std::endl;
+      //   if(telloPose.position.y < gotoPose.y)
+      //     cmdVelMsg.linear.y =-0.1;
+      //   else
+      //     cmdVelMsg.linear.y =0.1;
+      // }
+      // std::cout << "z:" << gotoPose.z << " " << telloPose.position.z << " " << dist_max << std::endl;
+      // if(abs(gotoPose.z - telloPose.position.z) > dist_max){
+      //   std::cout << "entrou" << std::endl;
+      //   if(telloPose.position.z < gotoPose.z)
+      //     cmdVelMsg.linear.z = -0.5;
+      //   else
+      //     cmdVelMsg.linear.z = 0.5;
+      // }
+
+      cmdVelMsg.linear.x = (-1)*cstP*deltaX + cstI*(deltaX*(time-last_time)) + cstD*(deltaX-last_deltaX)/(time-last_time);
+      cmdVelMsg.linear.y = (cstP*deltaY + cstI*(deltaY*(time-last_time)) + cstD*(deltaY-last_deltaY)/(time-last_time));
+      cmdVelMsg.linear.z = (cstP_eixoZ*deltaZ + cstI_eixoZ*(deltaZ*(time-last_time)) + cstD_eixoZ*(deltaZ-last_deltaZ)/(time-last_time));
+      flag_cheguei.data = 0;
+
+      if (cmdVelMsg.linear.x > maxVel)
+          cmdVelMsg.linear.x = maxVel;
+      if (cmdVelMsg.linear.x < -maxVel)
+          cmdVelMsg.linear.x = -maxVel;
+
+      if (cmdVelMsg.linear.y > maxVel)
+          cmdVelMsg.linear.y = maxVel;
+      if (cmdVelMsg.linear.y < -maxVel)
+          cmdVelMsg.linear.y = -maxVel;
+
+      if (cmdVelMsg.linear.z > maxVel)
+          cmdVelMsg.linear.z = maxVel;
+      if (cmdVelMsg.linear.z < -maxVel)
+          cmdVelMsg.linear.z = -maxVel;
+      
+      if(abs(gotoPose.x - telloPose.position.x) < dist_max){
+        if(abs(gotoPose.y - telloPose.position.y) < dist_max){
+          if(abs(gotoPose.z - telloPose.position.z) < dist_max){
+            flag_cheguei.data = 1;
+            cmdVelMsg.linear.x = 0;
+            cmdVelMsg.linear.y = 0;
+            cmdVelMsg.linear.z = 0;
+          } 
+        }
+      }
     }
     else{
       cmdVelMsg.linear.x = 0;
