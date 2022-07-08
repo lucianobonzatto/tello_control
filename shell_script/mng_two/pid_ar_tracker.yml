@@ -10,5 +10,5 @@ windows:
   - pid:
       layout: tiled
       panes:
-        - sleep 1; roslaunch tello_control pid0_control.launch
-        - sleep 2; roslaunch tello_control pid8_control.launch
+        - sleep 1; roslaunch tello_control pid1_control.launch
+        - sleep 10; roslaunch tello_control pid8_control.launch
