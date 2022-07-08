@@ -1,10 +1,9 @@
 #!/bin/bash
 
-chmod +x ar_track.sh
-chmod +x pid_control.sh
-chmod +x tello_control.sh
-
-gnome-terminal --window -- ./pid_control.sh
+gnome-terminal --window -- ~/tello_ws/src/tello_control/shell_script/mng_one/ar_track.sh
 sleep 5
 
-gnome-terminal --window -- ./tello_control.sh
+gnome-terminal --window -- ~/tello_ws/src/tello_control/shell_script/mng_one/pid_control.sh
+sleep 5
+
+gnome-terminal --window -- ~/tello_ws/src/tello_control/shell_script/mng_one/tello_control.sh

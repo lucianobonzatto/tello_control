@@ -70,8 +70,8 @@ int main(int argc, char *argv[])
   float last_deltaX = 0, last_deltaY = 0, last_deltaZ = 0;
   float cstP = 0.01, cstI = 0.01, cstD = 0.01;
   float cstP_eixoZ = 0.01, cstI_eixoZ = 0.01, cstD_eixoZ = 0.01;
-  float maxVel = 3.0;
-  float dist_max = 0.1;
+  float maxVel = 1.0;
+  float dist_max = 0.15;
 
   tag_id = 0;
 
@@ -195,7 +195,7 @@ int main(int argc, char *argv[])
       
       if(abs(gotoPose.x - telloPose.position.x) < dist_max){
         if(abs(gotoPose.y - telloPose.position.y) < dist_max){
-          if(abs(gotoPose.z - telloPose.position.z) < dist_max){
+          if(abs(gotoPose.z - telloPose.position.z) < dist_max*2){
             flag_cheguei.data = 1;
             cmdVelMsg.linear.x = 0;
             cmdVelMsg.linear.y = 0;
