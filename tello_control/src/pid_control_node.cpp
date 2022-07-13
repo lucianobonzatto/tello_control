@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
   float last_deltaX = 0, last_deltaY = 0, last_deltaZ = 0;
   float cstP = 0.01, cstI = 0.01, cstD = 0.01;
   float cstP_eixoZ = 0.01, cstI_eixoZ = 0.01, cstD_eixoZ = 0.01;
-  float maxVel = 1.0;
+  float maxVel = 0.5;
   float dist_max = 0.15;
 
   tag_id = 0;

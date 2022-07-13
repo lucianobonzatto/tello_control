@@ -142,29 +142,33 @@ int main(int argc, char *argv[])
   geometry_msgs::Pose ponto5;
   geometry_msgs::Pose ponto6;
 
-  ponto0.position.x = 0.5;
-  ponto0.position.y = 0.5;
+  ponto0.position.x = 0.0;
+  ponto0.position.y = 0.0;
   ponto0.position.z = 2.0;
 
-  ponto1.position.x = -0.5;
-  ponto1.position.y = 0.5;
+  ponto1.position.x = 0.45;
+  ponto1.position.y = 0.45;
   ponto1.position.z = 2.0;
 
-  ponto2.position.x = -0.5;
-  ponto2.position.y = -0.2;
+  ponto2.position.x = -0.45;
+  ponto2.position.y = 0.45;
   ponto2.position.z = 2.0;
- 
-  ponto3.position.x = 0.5;
-  ponto3.position.y = -0.2;
-  ponto3.position.z = 2.0;
 
-  ponto4.position.x = 0.5;
-  ponto4.position.y = 0.5;
+  ponto3.position.x = -0.45;
+  ponto3.position.y = -0.15;
+  ponto3.position.z = 2.0;
+ 
+  ponto4.position.x = 0.45;
+  ponto4.position.y = -0.15;
   ponto4.position.z = 2.0;
 
-  ponto5.position.x = 0.0;
-  ponto5.position.y = 0.0;
+  ponto5.position.x = 0.45;
+  ponto5.position.y = 0.45;
   ponto5.position.z = 2.0;
+
+  ponto6.position.x = 0.0;
+  ponto6.position.y = 0.0;
+  ponto6.position.z = 2.0;
 
   geometry_msgs::Pose ponto0T;
   geometry_msgs::Pose ponto1T;
@@ -351,6 +355,23 @@ int main(int argc, char *argv[])
             //verifica se chegou
             if(pid_flag == 1){
               flag_square = 0;
+              state_square = 6;
+            }
+            
+          }
+          break;
+        case 6:
+          cout << "ponto 7 " << pid_flag  << endl;
+          if(flag_square == 0){
+            //goto ponto 6
+            goto_pub.publish(ponto6);
+            if(pid_flag == 0)
+              flag_square = 1;
+          }
+          else{
+            //verifica se chegou
+            if(pid_flag == 1){
+              flag_square = 0;
               state_square = -1;
             }
             
@@ -454,7 +475,7 @@ int main(int argc, char *argv[])
         geometry_msgs::Pose ponto_fixo;
 
         ponto_fixo.position.x = 0.0;
-        ponto_fixo.position.y = 0.0;
+        ponto_fixo.position.y = -0.15;
         ponto_fixo.position.z = 1.0;
         goto_pub.publish(ponto_fixo);
         cout << "FIXO END" << endl;
