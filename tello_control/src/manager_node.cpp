@@ -117,11 +117,11 @@ int main(int argc, char *argv[])
   ros::NodeHandle nh(""), nh_param("~");
   ros::Rate loop_rate(10);
 
-  ros::Publisher takeoff_pub = nh.advertise<std_msgs::Empty>("/tello_ID0/takeoff", 1);
-  ros::Publisher land_pub = nh.advertise<std_msgs::Empty>("/tello_ID0/land", 1);
-  ros::Publisher goto_pub = nh.advertise<geometry_msgs::Pose>("tello_ID0/pid/goto", 1);
-  ros::Publisher pid_start_pub = nh.advertise<std_msgs::Bool>("tello_ID0/pid/start", 1);
-  ros::Subscriber pid_flag_sub = nh.subscribe<std_msgs::Bool>("tello_ID0/pid/flag", 1, &pidFlagCallback);
+  ros::Publisher takeoff_pub = nh.advertise<std_msgs::Empty>("/tello_ID1/takeoff", 1);
+  ros::Publisher land_pub = nh.advertise<std_msgs::Empty>("/tello_ID1/land", 1);
+  ros::Publisher goto_pub = nh.advertise<geometry_msgs::Pose>("tello_ID1/pid/goto", 1);
+  ros::Publisher pid_start_pub = nh.advertise<std_msgs::Bool>("tello_ID1/pid/start", 1);
+  ros::Subscriber pid_flag_sub = nh.subscribe<std_msgs::Bool>("tello_ID1/pid/flag", 1, &pidFlagCallback);
 
   int state_square = 0, flag_square = 0;
 
@@ -138,22 +138,37 @@ int main(int argc, char *argv[])
   geometry_msgs::Pose ponto1;
   geometry_msgs::Pose ponto2;
   geometry_msgs::Pose ponto3;
+  geometry_msgs::Pose ponto4;
+  geometry_msgs::Pose ponto5;
+  geometry_msgs::Pose ponto6;
 
-  ponto0.position.x = 0.5;
-  ponto0.position.y = 0.5;
+  ponto0.position.x = 0.0;
+  ponto0.position.y = 0.0;
   ponto0.position.z = 2.0;
 
-  ponto1.position.x = 0.5;
-  ponto1.position.y = -0.2;
+  ponto1.position.x = 0.45;
+  ponto1.position.y = 0.45;
   ponto1.position.z = 2.0;
 
-  ponto2.position.x = -0.5;
-  ponto2.position.y = -0.2;
+  ponto2.position.x = -0.45;
+  ponto2.position.y = 0.45;
   ponto2.position.z = 2.0;
- 
-  ponto3.position.x = -0.5;
-  ponto3.position.y = 0.5;
+
+  ponto3.position.x = -0.45;
+  ponto3.position.y = -0.15;
   ponto3.position.z = 2.0;
+ 
+  ponto4.position.x = 0.45;
+  ponto4.position.y = -0.15;
+  ponto4.position.z = 2.0;
+
+  ponto5.position.x = 0.45;
+  ponto5.position.y = 0.45;
+  ponto5.position.z = 2.0;
+
+  ponto6.position.x = 0.0;
+  ponto6.position.y = 0.0;
+  ponto6.position.z = 2.0;
 
   geometry_msgs::Pose ponto0T;
   geometry_msgs::Pose ponto1T;
@@ -246,7 +261,7 @@ int main(int argc, char *argv[])
         switch(state_square)
         {
         case 0:
-          cout << "ponto 0 " << pid_flag << endl;
+          cout << "ponto 1 " << pid_flag << endl;
           if(flag_square == 0){
             //goto ponto 0
             goto_pub.publish(ponto0);
@@ -262,7 +277,7 @@ int main(int argc, char *argv[])
           }
           break;
         case 1:
-          cout << "ponto 1 " << pid_flag << endl;
+          cout << "ponto 2 " << pid_flag << endl;
           if(flag_square == 0){
             //goto ponto 1
             goto_pub.publish(ponto1);
@@ -278,7 +293,7 @@ int main(int argc, char *argv[])
           }
           break;
         case 2:
-          cout << "ponto 2 " << pid_flag  << endl;
+          cout << "ponto 3 " << pid_flag  << endl;
           if(flag_square == 0){
             //goto ponto 2
             goto_pub.publish(ponto2);
@@ -295,10 +310,61 @@ int main(int argc, char *argv[])
           }
           break;
         case 3:
-          cout << "ponto 3 " << pid_flag  << endl;
+          cout << "ponto 4 " << pid_flag  << endl;
           if(flag_square == 0){
             //goto ponto 3
             goto_pub.publish(ponto3);
+            if(pid_flag == 0)
+              flag_square = 1;
+          }
+          else{
+            //verifica se chegou
+            if(pid_flag == 1){
+              flag_square = 0;
+              state_square = 4;
+            }
+            
+          }
+          break;
+        case 4:
+          cout << "ponto 5 " << pid_flag  << endl;
+          if(flag_square == 0){
+            //goto ponto 4
+            goto_pub.publish(ponto4);
+            if(pid_flag == 0)
+              flag_square = 1;
+          }
+          else{
+            //verifica se chegou
+            if(pid_flag == 1){
+              flag_square = 0;
+              state_square = 5;
+            }
+            
+          }
+          break;
+        case 5:
+          cout << "ponto 6 " << pid_flag  << endl;
+          if(flag_square == 0){
+            //goto ponto 5
+            goto_pub.publish(ponto5);
+            if(pid_flag == 0)
+              flag_square = 1;
+          }
+          else{
+            //verifica se chegou
+            if(pid_flag == 1){
+              flag_square = 0;
+              state_square = 6;
+            }
+            
+          }
+          break;
+        case 6:
+          cout << "ponto 7 " << pid_flag  << endl;
+          if(flag_square == 0){
+            //goto ponto 6
+            goto_pub.publish(ponto6);
             if(pid_flag == 0)
               flag_square = 1;
           }
@@ -406,6 +472,12 @@ int main(int argc, char *argv[])
       case FIXO:
         cout << "FIXO START" << endl;
         //state = PARA_PID;
+        geometry_msgs::Pose ponto_fixo;
+
+        ponto_fixo.position.x = 0.0;
+        ponto_fixo.position.y = -0.15;
+        ponto_fixo.position.z = 1.0;
+        goto_pub.publish(ponto_fixo);
         cout << "FIXO END" << endl;
         break;
     }

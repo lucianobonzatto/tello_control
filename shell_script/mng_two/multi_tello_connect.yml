@@ -6,5 +6,5 @@ windows:
   - drivers:
       layout: tiled
       panes:
-        - roslaunch tello_driver tello_node_ID0.launch
-        - sleep 15; roslaunch tello_driver tello_node_ID8.launch
+        - roslaunch tello_driver tello_node_ID1.launch
+        - roslaunch tello_driver tello_node_ID8.launch

@@ -27,11 +27,11 @@ geometry_msgs::Point gotoPose;
 ros::Publisher pose_pub;
 
 int state;
-int pid_flag_ID0, pid_flag_ID8;
+int pid_flag_ID1, pid_flag_ID8;
 int running;
 
-void pidFlag_ID0_Callback(const std_msgs::Bool::ConstPtr& msg){
-  pid_flag_ID0 = (int) msg->data;
+void pidFlag_ID1_Callback(const std_msgs::Bool::ConstPtr& msg){
+  pid_flag_ID1 = (int) msg->data;
 }
 void pidFlag_ID8_Callback(const std_msgs::Bool::ConstPtr& msg){
   pid_flag_ID8 = (int) msg->data;
@@ -100,12 +100,12 @@ void keyboardThread(){
   }
 }
 
-void includePoints(std::vector<geometry_msgs::Pose>* line_ID0, float x, float y, float z){
+void includePoints(std::vector<geometry_msgs::Pose>* line_ID1, float x, float y, float z){
   geometry_msgs::Pose point;
   point.position.x = x;
   point.position.y = y;
   point.position.z = z;
-  line_ID0->push_back(point);
+  line_ID1->push_back(point);
 }
 
 int main(int argc, char *argv[])
@@ -114,13 +114,15 @@ int main(int argc, char *argv[])
   ros::NodeHandle nh("");
   ros::Rate loop_rate(10);
 
-  ros::Publisher takeoff_pub_ID0 = nh.advertise<std_msgs::Empty>("/tello_ID0/manual_takeoff", 1);
-  ros::Publisher land_pub_ID0 = nh.advertise<std_msgs::Empty>("/tello_ID0/land", 1);
-  ros::Publisher goto_pub_ID0 = nh.advertise<geometry_msgs::Pose>("tello_ID0/pid/goto", 1);
-  ros::Publisher pid_start_pub_ID0 = nh.advertise<std_msgs::Bool>("tello_ID0/pid/start", 1);
-  ros::Subscriber pid_flag_sub_ID0 = nh.subscribe<std_msgs::Bool>("tello_ID0/pid/flag", 1, &pidFlag_ID0_Callback);
+  ros::Publisher takeoff_pub_ID1 = nh.advertise<std_msgs::Empty>("/tello_ID1/takeoff", 1);
+//  ros::Publisher takeoff_pub_ID1 = nh.advertise<std_msgs::Empty>("/tello_ID1/manual_takeoff", 1);
+  ros::Publisher land_pub_ID1 = nh.advertise<std_msgs::Empty>("/tello_ID1/land", 1);
+  ros::Publisher goto_pub_ID1 = nh.advertise<geometry_msgs::Pose>("tello_ID1/pid/goto", 1);
+  ros::Publisher pid_start_pub_ID1 = nh.advertise<std_msgs::Bool>("tello_ID1/pid/start", 1);
+  ros::Subscriber pid_flag_sub_ID1 = nh.subscribe<std_msgs::Bool>("tello_ID1/pid/flag", 1, &pidFlag_ID1_Callback);
 
-  ros::Publisher takeoff_pub_ID8 = nh.advertise<std_msgs::Empty>("/tello_ID8/manual_takeoff", 1);
+  ros::Publisher takeoff_pub_ID8 = nh.advertise<std_msgs::Empty>("/tello_ID8/takeoff", 1);
+//  ros::Publisher takeoff_pub_ID8 = nh.advertise<std_msgs::Empty>("/tello_ID8/manual_takeoff", 1);
   ros::Publisher land_pub_ID8 = nh.advertise<std_msgs::Empty>("/tello_ID8/land", 1);
   ros::Publisher goto_pub_ID8 = nh.advertise<geometry_msgs::Pose>("tello_ID8/pid/goto", 1);
   ros::Publisher pid_start_pub_ID8 = nh.advertise<std_msgs::Bool>("tello_ID8/pid/start", 1);
@@ -130,20 +132,20 @@ int main(int argc, char *argv[])
 
   state = 0;
   running = 1;
-  pid_flag_ID0 = 0;
+  pid_flag_ID1 = 0;
   pid_flag_ID8 = 0;
   std::thread keyboardRead(keyboardThread);
 
 
   std_msgs::Empty emptyMsg;
   std_msgs::Bool boolMsg;
-  std::vector<geometry_msgs::Pose> line_ID0;
+  std::vector<geometry_msgs::Pose> line_ID1;
   std::vector<geometry_msgs::Pose> line_ID8;
 
-  includePoints(&line_ID0, 0.2, 0.00, 2.0);
-  includePoints(&line_ID0, 0.6, 0.00, 2.0);
-  includePoints(&line_ID0, 0.2, 0.00, 2.0);
-  //includePoints(&line_ID0, 0.2, 0.00, 1.0);
+  includePoints(&line_ID1, 0.2, 0.00, 2.0);
+  includePoints(&line_ID1, 0.6, 0.00, 2.0);
+  includePoints(&line_ID1, 0.2, 0.00, 2.0);
+  //includePoints(&line_ID1, 0.2, 0.00, 1.0);
 
   includePoints(&line_ID8, -0.2, 0.40, 2.0);
   includePoints(&line_ID8, -0.6, 0.40, 2.0);
@@ -162,7 +164,7 @@ int main(int argc, char *argv[])
         
       case TAKEOFF:
         cout << "TAKEOFF START" << endl;
-        takeoff_pub_ID0.publish(emptyMsg);
+        takeoff_pub_ID1.publish(emptyMsg);
         takeoff_pub_ID8.publish(emptyMsg);
         sleep(5);
         state = VOANDO;
@@ -172,10 +174,10 @@ int main(int argc, char *argv[])
       case LAND:
         cout << "LAND START" << endl;
         boolMsg.data = 0;
-        pid_start_pub_ID0.publish(boolMsg);
+        pid_start_pub_ID1.publish(boolMsg);
         pid_start_pub_ID8.publish(boolMsg);
 
-        land_pub_ID0.publish(emptyMsg);
+        land_pub_ID1.publish(emptyMsg);
         land_pub_ID8.publish(emptyMsg);
         sleep(5);
         state = POUSADO;
@@ -188,7 +190,7 @@ int main(int argc, char *argv[])
       case ACIONA_PID_1:
         cout << "ACIONA_PID_1 START" << endl;
         boolMsg.data = 1;
-        pid_start_pub_ID0.publish(boolMsg);
+        pid_start_pub_ID1.publish(boolMsg);
         pid_start_pub_ID8.publish(boolMsg);
         state = FIXO;
         cout << "ACIONA_PID_1 END" << endl;
@@ -197,7 +199,7 @@ int main(int argc, char *argv[])
       case ACIONA_PID_2:
         cout << "ACIONA_PID_2 START" << endl;
         boolMsg.data = 1;
-        pid_start_pub_ID0.publish(boolMsg);
+        pid_start_pub_ID1.publish(boolMsg);
         pid_start_pub_ID8.publish(boolMsg);
         state = LINE;
         cout << "ACIONA_PID_2 END" << endl;
@@ -206,7 +208,7 @@ int main(int argc, char *argv[])
       case PARA_PID:
         cout << "PARA_PID START" << endl;
         boolMsg.data = 0;
-        pid_start_pub_ID0.publish(boolMsg);
+        pid_start_pub_ID1.publish(boolMsg);
         pid_start_pub_ID8.publish(boolMsg);
         state = VOANDO;
         cout << "PARA_PID END" << endl;
@@ -215,24 +217,24 @@ int main(int argc, char *argv[])
       case LINE:
         cout << "LINE START" << endl;
         //state = PARA_PID;
-        cout << "ponto " << state_square << " flag: " << pid_flag_ID0;
-        cout << "\n\tID0 x: " << line_ID0[state_square].position.x << " y: " << line_ID0[state_square].position.y << " z: " << line_ID0[state_square].position.z << endl;
+        cout << "ponto " << state_square << " flag: " << pid_flag_ID1;
+        cout << "\n\tID1 x: " << line_ID1[state_square].position.x << " y: " << line_ID1[state_square].position.y << " z: " << line_ID1[state_square].position.z << endl;
         cout << "\n\tID8 x: " << line_ID8[state_square].position.x << " y: " << line_ID8[state_square].position.y << " z: " << line_ID8[state_square].position.z << endl;
         if(flag_square == 0){
           //publica o proximo destino
-          goto_pub_ID0.publish(line_ID0[state_square]);
+          goto_pub_ID1.publish(line_ID1[state_square]);
           goto_pub_ID8.publish(line_ID8[state_square]);
           //garante que o pid foi atualizado
-          if(pid_flag_ID0 == 0 && pid_flag_ID8 == 0)
+          if(pid_flag_ID1 == 0 && pid_flag_ID8 == 0)
             flag_square = 1;
         }
         else{
           //verifica se chegou
-          if(pid_flag_ID0 == 1 && pid_flag_ID8 == 1){
+          if(pid_flag_ID1 == 1 && pid_flag_ID8 == 1){
             flag_square = 0;
             state_square++;
             //verifica se terminou a rotina
-            if(state_square >= line_ID0.size()){
+            if(state_square >= line_ID1.size()){
               state_square = 0;
               state = PARA_PID;
             }

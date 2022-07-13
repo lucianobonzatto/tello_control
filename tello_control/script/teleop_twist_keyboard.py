@@ -62,9 +62,9 @@ speedBindings={
 class PublishThread(threading.Thread):
     def __init__(self, rate):
         super(PublishThread, self).__init__()
-        self.publisher = rospy.Publisher('/tello_ID0/cmd_vel', Twist, queue_size = 1)
-        self.takeoff_pub = rospy.Publisher('/tello_ID0/takeoff', Empty, queue_size=1)
-        self.land_pub = rospy.Publisher('/tello_ID0/land', Empty, queue_size=1)
+        self.publisher = rospy.Publisher('/tello_ID1/cmd_vel', Twist, queue_size = 1)
+        self.takeoff_pub = rospy.Publisher('/tello_ID1/takeoff', Empty, queue_size=1)
+        self.land_pub = rospy.Publisher('/tello_ID1/land', Empty, queue_size=1)
         self.x = 0.0
         self.y = 0.0
         self.z = 0.0

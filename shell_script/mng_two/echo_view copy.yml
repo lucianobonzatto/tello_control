@@ -6,10 +6,10 @@ windows:
   - echo_view:
       layout: tiled
       panes:
-        - sleep 2; rostopic echo /tello_ID0/land
-        - sleep 2; rostopic echo /tello_ID0/takeoff
-        - sleep 2; rostopic echo /tello_ID0/pid/start
-        - sleep 2; rostopic echo /tello_ID0/pid/flag
+        - sleep 2; rostopic echo /tello_ID1/land
+        - sleep 2; rostopic echo /tello_ID1/takeoff
+        - sleep 2; rostopic echo /tello_ID1/pid/start
+        - sleep 2; rostopic echo /tello_ID1/pid/flag
         - sleep 2; rostopic echo /tello_ID8/land
         - sleep 2; rostopic echo /tello_ID8/takeoff
         - sleep 2; rostopic echo /tello_ID8/pid/start
